@@ -68,3 +68,17 @@ export function parseFullName(input: string): { fullName: FullName } {
     }
   };
 }
+
+
+export function extractLastText(input: string): string {
+  // Split the input string by the '|' delimiter
+  const parts = input.split('|');
+
+  // Extract the last element and sanitize it to allow only alphanumeric characters
+  const lastPart = parts[parts.length - 1].trim();
+  
+  // Remove non-alphanumeric characters using a regular expression
+  const sanitizedText = lastPart.replace(/[^a-zA-Z0-9\s]/g, ""); // Keeps letters, numbers, and spaces
+
+  return sanitizedText;
+}

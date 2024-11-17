@@ -1,4 +1,6 @@
 import { formatDate } from './index';
+import { parseFullName } from './index';
+
 
  
 describe("formatDate function", () => {
@@ -59,4 +61,58 @@ describe("formatDate function", () => {
   test("throws an error for all zeros as input", () => {
     expect(() => formatDate("00000000")).toThrow("Day must be between 01 and 31 for the given month and year.");
   });
+});
+
+describe('parseFullName', () => {
+
+  // Test case for valid input with all parts (lastName, firstName, middleName)
+  test('should parse valid full name with middle name', () => {
+    const input = "Smith^John^A";
+    const expected = {
+      fullName: {
+        lastName: "Smith",
+        firstName: "John",
+        middleName: "A"
+      }
+    };
+    expect(parseFullName(input)).toEqual(expected);
+  });
+
+  // Test case for valid input with missing middle name
+  test('should parse valid full name without middle name', () => {
+    const input = "Smith^John";
+    const expected = {
+      fullName: {
+        lastName: "Smith",
+        firstName: "John",
+        middleName: ""
+      }
+    };
+    expect(parseFullName(input)).toEqual(expected);
+  });
+
+  // Test case for invalid input with less than two parts
+  test('should throw error when input has less than two parts', () => {
+    const input = "Smith";
+    expect(() => parseFullName(input)).toThrow("Input must be in the format 'lastName^firstName^middleName' (middleName is optional).");
+  });
+
+  // Test case for invalid input with more than three parts
+  test('should throw error when input has more than three parts', () => {
+    const input = "Smith^John^A^Extra";
+    expect(() => parseFullName(input)).toThrow("Input must be in the format 'lastName^firstName^middleName' (middleName is optional).");
+  });
+
+  // Test case for invalid input with empty string
+  test('should throw error when input is an empty string', () => {
+    const input = "";
+    expect(() => parseFullName(input)).toThrow("Input must be in the format 'lastName^firstName^middleName' (middleName is optional).");
+  });
+
+  // Test case for input with invalid characters (non-alphanumeric characters)
+  test('should throw error when input has invalid characters', () => {
+    const input = "Smith^John^@";
+    expect(() => parseFullName(input)).toThrow("String contains non-alphabetical character: \"@\"");
+  });
+
 });

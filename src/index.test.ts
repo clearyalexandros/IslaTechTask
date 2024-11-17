@@ -1,5 +1,7 @@
 import { formatDate } from './index';
 import { parseFullName } from './index';
+import { extractLastText } from './index';
+
 
 
  
@@ -63,7 +65,7 @@ describe("formatDate function", () => {
   });
 });
 
-describe('parseFullName', () => {
+describe('parseFullName function', () => {
 
   // Test case for valid input with all parts (lastName, firstName, middleName)
   test('should parse valid full name with middle name', () => {
@@ -115,4 +117,52 @@ describe('parseFullName', () => {
     expect(() => parseFullName(input)).toThrow("String contains non-alphabetical character: \"@\"");
   });
 
+});
+
+
+describe('extractLastText function', () => {
+  test('should extract the last part of a valid input with alphanumeric characters', () => {
+    const input = "DET|1|I|^^MainDepartment^101^Room 1|Common Cold";
+    expect(extractLastText(input)).toBe("Common Cold");
+  });
+
+  test('should remove special characters from the last part', () => {
+    const input = "DET|123|Some Info|Final@Text&Here!";
+    expect(extractLastText(input)).toBe("FinalTextHere");
+  });
+
+  test('should return the last part unchanged if it contains only alphanumeric characters and spaces', () => {
+    const input = "A|B|Test Last Part";
+    expect(extractLastText(input)).toBe("Test Last Part");
+  });
+
+  test('should return an empty string if the last part is non-alphanumeric', () => {
+    const input = "A|B|###|||^^@!";
+    expect(extractLastText(input)).toBe("");
+  });
+
+  test('should return an empty string for an empty input', () => {
+    const input = "";
+    expect(extractLastText(input)).toBe("");
+  });
+
+  test('should handle input with trailing delimiters', () => {
+    const input = "A|B|C|";
+    expect(extractLastText(input)).toBe("");
+  });
+
+  test('should handle input with no delimiters', () => {
+    const input = "SinglePart";
+    expect(extractLastText(input)).toBe("SinglePart");
+  });
+
+  test('should handle input with only delimiters', () => {
+    const input = "|||||";
+    expect(extractLastText(input)).toBe("");
+  });
+
+  test('should handle input with mixed alphanumeric and special characters in the last part', () => {
+    const input = "1|2|3|Hello@123!";
+    expect(extractLastText(input)).toBe("Hello123");
+  });
 });

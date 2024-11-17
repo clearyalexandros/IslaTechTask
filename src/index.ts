@@ -29,3 +29,42 @@ export function formatDate(input: string): string {
   const formattedDate = `${year.toString().padStart(4, "0")}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
   return formattedDate;
 }
+
+interface FullName {
+  lastName: string;
+  firstName: string;
+  middleName: string;  // Middle name is optional 
+}
+
+export function parseFullName(input: string): { fullName: FullName } {
+  const nameParts = input.split('^');
+
+  // Ensure there are at least two parts (lastName, firstName) and optionally a middleName
+  if (nameParts.length < 2 || nameParts.length > 3) {
+    throw new Error("Input must be in the format 'lastName^firstName^middleName' (middleName is optional).");
+  }
+
+  const regex = /[^a-zA-Z]/; // Regular expression to match any non-alphabetical character
+
+  for (const str of nameParts) {
+    if (regex.test(str)) {
+      throw new Error(`String contains non-alphabetical character: "${str}"`);
+    }
+  }
+
+  // If middle name is not provided make sure we set it as a blank string otherwise it will be added as 'undefined'and cause issues
+  if( nameParts.length == 2){
+    nameParts.push("");
+  }
+
+  const [lastName, firstName, middleName] = nameParts;
+
+  // Return the full name object, middleName is optional
+  return {
+    fullName: {
+      lastName,
+      firstName,
+      middleName
+    }
+  };
+}

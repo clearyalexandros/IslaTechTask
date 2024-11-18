@@ -91,7 +91,13 @@ export function parseSegments(input: string): Map <any,any> {
   const lines = input.trim().split('\n');
 
   // Iterate through each line
-  for (const line of lines) {
+  for (let line of lines) {
+    // Skip empty lines after trimming
+    if (!line) continue;
+
+    // trim any leading spaces at the beginning of the line
+    line = line.trimStart();
+
     // Split each line into the key and the rest of the data
     const [key, ...dataParts] = line.split('|');
     if (key) {
@@ -110,4 +116,35 @@ export function splitDataIntoArray(input: string): string[] {
   }
   // Split the input string by '|' and filter out empty strings
   return input.split('|').filter(value => value !== "");
+}
+
+
+export function processInput(input: string) {
+  // Parse the segments into a map
+  const segments = parseSegments(input);
+
+  // Extract and process the relevant segments
+  const prsSegment = segments.get("PRS");
+  const detSegment = segments.get("DET");
+
+  if (!prsSegment || !detSegment) {
+    throw new Error("Missing required segments (PRS or DET) in input.");
+  }
+
+  // Extract full name from PRS segment
+  const prsFields = splitDataIntoArray(prsSegment); 
+  const fullNameObject = parseFullName(prsFields[2]); // Extract the name field
+
+  // Extract date of birth from PRS segment
+  const formattedDob = formatDate(prsFields[4]); // Extract the date of birth field
+
+  // Extract primary condition from DET segment
+  const primaryCondition = extractLastText(detSegment);
+
+  // Construct and return the final object
+  return {
+    fullName: fullNameObject.fullName,
+    dateOfBirth: formattedDob,
+    primaryCondition,
+  };
 }

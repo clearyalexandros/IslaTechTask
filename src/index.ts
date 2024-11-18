@@ -102,3 +102,12 @@ export function parseSegments(input: string): Map <any,any> {
 
   return segmentMap;
 }
+
+export function splitDataIntoArray(input: string): string[] {
+  if (!input.trim()) {
+    // Return an empty array for empty or whitespace-only input
+    return [];
+  }
+  // Split the input string by '|' and filter out empty strings
+  return input.split('|').filter(value => value !== "");
+}

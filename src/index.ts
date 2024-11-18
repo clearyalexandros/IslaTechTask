@@ -82,3 +82,23 @@ export function extractLastText(input: string): string {
 
   return sanitizedText;
 }
+
+export function parseSegments(input: string): Map <any,any> {
+  // Initialize an empty map to store key-value pairs
+  const segmentMap = new Map();
+
+  // Split the input by newlines to process each line
+  const lines = input.trim().split('\n');
+
+  // Iterate through each line
+  for (const line of lines) {
+    // Split each line into the key and the rest of the data
+    const [key, ...dataParts] = line.split('|');
+    if (key) {
+      // Reconstruct the value, including the first '|'
+      segmentMap.set(key, `|${dataParts.join('|')}`);
+    }
+  }
+
+  return segmentMap;
+}

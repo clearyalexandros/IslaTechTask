@@ -1,10 +1,8 @@
 import { formatDate } from './index';
 import { parseFullName } from './index';
 import { extractLastText } from './index';
+import { parseSegments } from './index';
 
-
-
- 
 describe("formatDate function", () => {
   // Valid inputs
   test("formats a standard valid date", () => {
@@ -164,5 +162,61 @@ describe('extractLastText function', () => {
   test('should handle input with mixed alphanumeric and special characters in the last part', () => {
     const input = "1|2|3|Hello@123!";
     expect(extractLastText(input)).toBe("Hello123");
+  });
+});
+
+describe('parseSegments function', () => {
+  test('should parse a single segment correctly', () => {
+    const input = "MSG|^~\\&|SenderSystem|Location|ReceiverSystem|Location|20230502112233";
+    const result = parseSegments(input);
+    expect(result.get("MSG")).toBe("|^~\\&|SenderSystem|Location|ReceiverSystem|Location|20230502112233");
+  });
+
+  test('should parse multiple segments correctly', () => {
+    const input = `MSG|^~\\&|SenderSystem|Location|ReceiverSystem|Location|20230502112233
+EVT|TYPE|20230502112233
+PRS|1|9876543210^^^Location^ID||Smith^John^A|||M|19800101|`;
+    const result = parseSegments(input);
+    expect(result.get("MSG")).toBe("|^~\\&|SenderSystem|Location|ReceiverSystem|Location|20230502112233");
+    expect(result.get("EVT")).toBe("|TYPE|20230502112233");
+    expect(result.get("PRS")).toBe("|1|9876543210^^^Location^ID||Smith^John^A|||M|19800101|");
+  });
+
+  test('should retain the first "|" after the key', () => {
+    const input = "DET|1|I|^^MainDepartment^101^Room 1|Common Col";
+    const result = parseSegments(input);
+    expect(result.get("DET")).toBe("|1|I|^^MainDepartment^101^Room 1|Common Col");
+  });
+
+  test('should handle input with missing data after key', () => {
+    const input = "EMPTY|";
+    const result = parseSegments(input);
+    expect(result.get("EMPTY")).toBe("|");
+  });
+
+  test('should handle input with empty lines', () => {
+    const input = `
+MSG|^~\\&|SenderSystem
+EVT|TYPE|20230502112233
+
+PRS|1|9876543210^^^Location^ID
+`;
+    const result = parseSegments(input);
+    expect(result.get("MSG")).toBe("|^~\\&|SenderSystem");
+    expect(result.get("EVT")).toBe("|TYPE|20230502112233");
+    expect(result.get("PRS")).toBe("|1|9876543210^^^Location^ID");
+  });
+
+  test('should return an empty map for empty input', () => {
+    const input = "";
+    const result = parseSegments(input);
+    expect(result.size).toBe(0);
+  });
+
+   test('should handle input with duplicate keys, keeping the last occurrence', () => {
+    const input = `KEY|FirstValue
+KEY|SecondValue`;
+    const result = parseSegments(input);
+    expect(result.get("KEY")).toBe("|SecondValue");
   });
 });

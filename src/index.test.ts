@@ -2,6 +2,7 @@ import { formatDate } from './index';
 import { parseFullName } from './index';
 import { extractLastText } from './index';
 import { parseSegments } from './index';
+import { splitDataIntoArray } from './index';
 
 describe("formatDate function", () => {
   // Valid inputs
@@ -218,5 +219,99 @@ PRS|1|9876543210^^^Location^ID
 KEY|SecondValue`;
     const result = parseSegments(input);
     expect(result.get("KEY")).toBe("|SecondValue");
+  });
+});
+
+
+describe('splitDataIntoArray function', () => {
+  test('should split input into an array and remove empty strings', () => {
+    const input = "|1|9876543210^^^Location^ID||Smith^John^A|||M|19800101|";
+    const result = splitDataIntoArray(input);
+    expect(result).toEqual([
+      "1",
+      "9876543210^^^Location^ID",
+      "Smith^John^A",
+      "M",
+      "19800101"
+    ]);
+  });
+
+  test('should handle input with only delimiters', () => {
+    const input = "||||";
+    const result = splitDataIntoArray(input);
+    expect(result).toEqual([]);
+  });
+
+  test('should handle input with no delimiters', () => {
+    const input = "NoDelimitersHere";
+    const result = splitDataIntoArray(input);
+    expect(result).toEqual(["NoDelimitersHere"]);
+  });
+
+  test('should handle input with leading and trailing delimiters only', () => {
+    const input = "|";
+    const result = splitDataIntoArray(input);
+    expect(result).toEqual([]);
+  });
+
+  test('should handle input with multiple consecutive delimiters', () => {
+    const input = "|A|||B||C|";
+    const result = splitDataIntoArray(input);
+    expect(result).toEqual(["A", "B", "C"]);
+  });
+
+  test('should handle empty input', () => {
+    const input = "";
+    const result = splitDataIntoArray(input);
+    expect(result).toEqual([]);
+  });
+
+  test('should trim input before splitting if needed', () => {
+    const input = "   |A|B|C|   ";
+    const result = splitDataIntoArray(input.trim());
+    expect(result).toEqual(["A", "B", "C"]);
+  });
+
+  test('should correctly split MSG input with multiple values and delimiters', () => {
+    const input = "MSG|^~\\&|SenderSystem|Location|ReceiverSystem|Location|20230502112233||DATA^TYPE|123456|P|2.5";
+    const result = splitDataIntoArray(input);
+  
+    expect(result).toEqual([
+      "MSG",
+      "^~\\&",
+      "SenderSystem",
+      "Location",
+      "ReceiverSystem",
+      "Location",
+      "20230502112233",
+      "DATA^TYPE",
+      "123456",
+      "P",
+      "2.5"
+    ]);
+  });
+
+  test('should correctly split EVT input with multiple values and delimiters', () => {
+    const input = "EVT|TYPE|20230502112233";
+    const result = splitDataIntoArray(input);
+  
+    expect(result).toEqual([
+      "EVT",
+      "TYPE",
+      "20230502112233"
+    ]);
+  });
+  
+  test('should correctly split DET input with complex values and delimiters', () => {
+    const input = "DET|1|I|^^MainDepartment^101^Room 1|Common Cold";
+    const result = splitDataIntoArray(input);
+  
+    expect(result).toEqual([
+      "DET",
+      "1",
+      "I",
+      "^^MainDepartment^101^Room 1",
+      "Common Cold"
+    ]);
   });
 });

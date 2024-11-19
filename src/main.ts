@@ -1,8 +1,9 @@
-import * as utils from './utils/helperFunctions';
+import { StringUtils }from './utils/stringUtils';
+import { DateUtils }from './utils/dateUtils';
 
 export function processInput(input: string) {
   // Parse the segments into a map
-  const segments = utils.parseSegments(input);
+  const segments = StringUtils.parseSegments(input);
 
   // Extract and process the relevant segments
   const prsSegment = segments.get("PRS");
@@ -13,14 +14,14 @@ export function processInput(input: string) {
   }
 
   // Extract full name from PRS segment
-  const prsFields = utils.splitDataIntoArray(prsSegment); 
-  const fullNameObject = utils.parseFullName(prsFields[2]); // Extract the name field
+  const prsFields = StringUtils.splitDataIntoArray(prsSegment); 
+  const fullNameObject = StringUtils.parseFullName(prsFields[2]); // Extract the name field
 
   // Extract date of birth from PRS segment
-  const formattedDob = utils.formatDate(prsFields[4]); // Extract the date of birth field
+  const formattedDob = DateUtils.formatDate(prsFields[4]); // Extract the date of birth field
 
   // Extract primary condition from DET segment
-  const primaryCondition = utils.extractLastText(detSegment);
+  const primaryCondition = StringUtils.extractLastText(detSegment);
 
   // Construct and return the final object
   return {

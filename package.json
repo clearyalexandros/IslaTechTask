@@ -4,7 +4,7 @@
   "description": "Isla Technical Interview Task",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node src/main.ts",
     "test": "jest"
   },
   "keywords": [],

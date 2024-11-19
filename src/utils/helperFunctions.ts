@@ -1,4 +1,7 @@
-export function formatDate(input: string): string {
+// formatDate() takes a date string in the YYYYMMDD format and returns it in the YYYY-MM-DD format.
+// It validates the input for the correct length, ensures it contains only numeric characters, and checks that the year, month, and day values are valid. 
+// If any validation fails, it throws an appropriate error.
+export  function formatDate(input: string): string {
     // Validate input length
   if (typeof input !== "string" || input.length !== 8) {
     throw new Error("Input must be an 8-character string in YYYYMMDD format.");
@@ -30,12 +33,8 @@ export function formatDate(input: string): string {
   return formattedDate;
 }
 
-interface FullName {
-  lastName: string;
-  firstName: string;
-  middleName: string;  // Middle name is optional 
-}
-
+// Parses a string input in the format lastName^firstName^middleName (where middleName is optional) and returns a FullName object.
+// Ensures all components of the name contain only alphabetical characters and validates the structure of the input.
 export function parseFullName(input: string): { fullName: FullName } {
   const nameParts = input.split('^');
 
@@ -69,7 +68,8 @@ export function parseFullName(input: string): { fullName: FullName } {
   };
 }
 
-
+// Extracts the last segment of a pipe-delimited (|) string, 
+// sanitizes it to remove non-alphanumeric characters (excluding spaces), and returns the cleaned result.
 export function extractLastText(input: string): string {
   // Split the input string by the '|' delimiter
   const parts = input.split('|');
@@ -83,6 +83,9 @@ export function extractLastText(input: string): string {
   return sanitizedText;
 }
 
+// Parses a string containing multiple segments separated by newlines (\n) and pipes (|), 
+// and returns a Map where each key-value pair corresponds to a segment's identifier and its associated data. 
+// The function also ensures leading spaces are removed from each line and skips empty lines.
 export function parseSegments(input: string): Map <any,any> {
   // Initialize an empty map to store key-value pairs
   const segmentMap = new Map();
@@ -109,6 +112,8 @@ export function parseSegments(input: string): Map <any,any> {
   return segmentMap;
 }
 
+// Splits a string into an array of substrings based on the pipe (|) delimiter. If the input string is empty or contains only whitespace, it returns an empty array. 
+// The function also filters out any empty strings resulting from consecutive delimiters or leading/trailing delimiters.
 export function splitDataIntoArray(input: string): string[] {
   if (!input.trim()) {
     // Return an empty array for empty or whitespace-only input
@@ -116,35 +121,4 @@ export function splitDataIntoArray(input: string): string[] {
   }
   // Split the input string by '|' and filter out empty strings
   return input.split('|').filter(value => value !== "");
-}
-
-
-export function processInput(input: string) {
-  // Parse the segments into a map
-  const segments = parseSegments(input);
-
-  // Extract and process the relevant segments
-  const prsSegment = segments.get("PRS");
-  const detSegment = segments.get("DET");
-
-  if (!prsSegment || !detSegment) {
-    throw new Error("Missing required segments (PRS or DET) in input.");
-  }
-
-  // Extract full name from PRS segment
-  const prsFields = splitDataIntoArray(prsSegment); 
-  const fullNameObject = parseFullName(prsFields[2]); // Extract the name field
-
-  // Extract date of birth from PRS segment
-  const formattedDob = formatDate(prsFields[4]); // Extract the date of birth field
-
-  // Extract primary condition from DET segment
-  const primaryCondition = extractLastText(detSegment);
-
-  // Construct and return the final object
-  return {
-    fullName: fullNameObject.fullName,
-    dateOfBirth: formattedDob,
-    primaryCondition,
-  };
 }

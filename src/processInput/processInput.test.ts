@@ -1,4 +1,4 @@
-import { processInput } from './main';
+import { processInput } from './processInput';
 
 
 describe('processInput function', () => {

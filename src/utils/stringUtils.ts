@@ -4,6 +4,11 @@ export class StringUtils{
   // Parses a string input in the format lastName^firstName^middleName (where middleName is optional) and returns a FullName object.
   // Ensures all components of the name contain only alphabetical characters and validates the structure of the input.
  static parseFullName(input: string): { fullName: FullName } {
+
+  if(!StringUtils.isStringValid(input)){
+    throw new Error("Input was null or undefined");
+  }
+
   const nameParts = input.split('^');
 
   // Ensure there are at least two parts (lastName, firstName) and optionally a middleName
@@ -39,6 +44,11 @@ export class StringUtils{
 // Extracts the last segment of a pipe-delimited (|) string, 
 // sanitizes it to remove non-alphanumeric characters (excluding spaces), and returns the cleaned result.
 static extractLastText(input: string): string {
+
+ 
+  if(!StringUtils.isStringValid(input)){
+    throw new Error("Input was null or undefined");
+  }
   // Split the input string by the '|' delimiter
   const parts = input.split('|');
 
@@ -55,6 +65,10 @@ static extractLastText(input: string): string {
 // and returns a Map where each key-value pair corresponds to a segment's identifier and its associated data. 
 // The function also ensures leading spaces are removed from each line and skips empty lines.
 static parseSegments(input: string): Map <any,any> {
+
+  if(!StringUtils.isStringValid(input)){
+    throw new Error("Input was null or undefined");
+  }
   // Initialize an empty map to store key-value pairs
   const segmentMap = new Map();
 
@@ -83,11 +97,36 @@ static parseSegments(input: string): Map <any,any> {
 // Splits a string into an array of substrings based on the pipe (|) delimiter. If the input string is empty or contains only whitespace, it returns an empty array. 
 // The function also filters out any empty strings resulting from consecutive delimiters or leading/trailing delimiters.
  static splitDataIntoArray(input: string): string[] {
+  
+
+  if(!StringUtils.isStringValid(input)){
+    throw new Error("Input was null or undefined");
+  }
+
   if (!input.trim()) {
     // Return an empty array for empty or whitespace-only input
     return [];
   }
+
+  // Check if the delimiter '|' exists in the input
+  if (!input.trim().includes('|')) {
+    throw new Error("Input does not contain the required delimiter '|'");
+  }
+
+
   // Split the input string by '|' and filter out empty strings
   return input.split('|').filter(value => value !== "");
 }
+
+
+// Checks if string is null or undefined
+static isStringValid(input: string): boolean {
+  if (typeof input === 'string' && input !== null && input !== undefined) {
+    return true;
+  }
+  return false;
+
 }
+}
+
+

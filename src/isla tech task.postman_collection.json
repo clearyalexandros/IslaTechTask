@@ -1,0 +1,38 @@
+{
+	"info": {
+		"_postman_id": "fa653a09-2c44-4e6a-b562-eee183a51e9e",
+		"name": "isla tech task",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19308596"
+	},
+	"item": [
+		{
+			"name": "http://localhost:3000/process-message",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"message\": \"MSG|^~\\\\&|SenderSystem|Location|ReceiverSystem|Location|20230502112233\\nEVT|TYPE|20230502112233\\nPRS|1|9876543210^^^Location^ID||Cleary^Alex^C|||M|19800101|\\nDET|1|I|^^MainDepartment^101^Room 1|Common Cold\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/process-message",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"process-message"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

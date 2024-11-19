@@ -1,3 +1,4 @@
+import {FullName} from '../interfaces/FullName'
 
 export class StringUtils{
   // Parses a string input in the format lastName^firstName^middleName (where middleName is optional) and returns a FullName object.

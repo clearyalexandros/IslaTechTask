@@ -1,4 +1,4 @@
-interface FullName {
+export interface FullName {
     lastName: string;
     firstName: string;
     middleName: string; 

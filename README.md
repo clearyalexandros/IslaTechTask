@@ -168,3 +168,7 @@ Run the unit tests for the project using Jest:
    ```
 
 ---
+
+## **Postman Collection**
+
+A postman collection was added to the project to allow for easier testing of the endpoint

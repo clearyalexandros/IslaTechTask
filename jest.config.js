@@ -5,5 +5,9 @@ module.exports = {
   transform: {
     "^.+.tsx?$": ["ts-jest",{}],
   },
-  roots: ['<rootDir>/src']
+  roots: ['<rootDir>/src'],
+  collectCoverage: true,
+  coverageDirectory: "coverage",
+  coverageReporters: ["text", "html", "lcov"],
+  collectCoverageFrom: ["src/**/*.{js,ts}"], 
 };

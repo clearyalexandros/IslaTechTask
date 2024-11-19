@@ -180,8 +180,7 @@ import { StringUtils } from './stringUtils';
   
     test('should handle input with no delimiters', () => {
       const input = "NoDelimitersHere";
-      const result = StringUtils.splitDataIntoArray(input);
-      expect(result).toEqual(["NoDelimitersHere"]);
+      expect(() => StringUtils.splitDataIntoArray(input)).toThrow("Input does not contain the required delimiter '|'");
     });
   
     test('should handle input with leading and trailing delimiters only', () => {
@@ -252,4 +251,36 @@ import { StringUtils } from './stringUtils';
     });
   });
   
+  describe('isStringValid function', () => {
+    it('should return true for a non-empty string', () => {
+      expect(StringUtils.isStringValid('hello')).toBe(true);
+    });
   
+    it('should return true for an empty string', () => {
+      expect(StringUtils.isStringValid('')).toBe(true);
+    });
+  
+    it('should return false for null', () => {
+      expect(StringUtils.isStringValid(null as unknown as string)).toBe(false);
+    });
+  
+    it('should return false for undefined', () => {
+      expect(StringUtils.isStringValid(undefined as unknown as string)).toBe(false);
+    });
+  
+    it('should return false for a number', () => {
+      expect(StringUtils.isStringValid(123 as unknown as string)).toBe(false);
+    });
+  
+    it('should return false for an object', () => {
+      expect(StringUtils.isStringValid({} as string)).toBe(false);
+    });
+  
+    it('should return false for an array', () => {
+      expect(StringUtils.isStringValid([] as unknown as string)).toBe(false);
+    });
+  
+    it('should return false for a boolean value', () => {
+      expect(StringUtils.isStringValid(true as unknown as string)).toBe(false);
+    });
+  });

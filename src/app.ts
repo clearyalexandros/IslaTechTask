@@ -1,8 +1,8 @@
-import express, { Request, Response } from "express";
-import { processInput } from "./main"; // Adjust path if necessary
+import express from "express";
+import { processInput } from "./processInput/processInput"; 
 import { FullName } from "./interfaces/FullName";
 
-const app = express();
+const  app = express();
 const PORT = 3000;
 
 // Middleware to parse JSON body

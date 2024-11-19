@@ -1,5 +1,5 @@
-import { StringUtils }from './utils/stringUtils';
-import { DateUtils }from './utils/dateUtils';
+import { StringUtils }from '../utils/stringUtils';
+import { DateUtils }from '../utils/dateUtils';
 
 export function processInput(input: string) {
   // Parse the segments into a map

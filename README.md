@@ -168,3 +168,81 @@ Run the unit tests for the project using Jest:
    ```
 
 ---
+
+## **Postman Collection**
+
+A postman collection was added to the project to allow for easier testing of the endpoint
+
+---
+
+## **Future Work**
+
+
+1. This project could  be expaned using a layered architecture which ensures clear separation of concerns:
+
+Presentation Layer (API): Handles HTTP requests and responses, communicates with clients.
+Business Logic Layer (Service): Contains the core logic like data parsing, validation, and transformations.
+Data Access Layer (Repository): Interacts with the database, performing CRUD operations.
+
+An example of the layout of the project can be found below:
+```bash
+src/
+│
+├── controllers/    # API endpoints
+│   └── messageController.ts
+│
+├── services/       # Business logic
+│   └── messageService.ts
+│
+├── repositories/   # Database access logic
+│   └── messageRepository.ts
+│
+├── models/         # Database models and interfaces
+│   └── message.ts
+│
+├── utils/          # Shared utilities (e.g., logging, validation)
+│   └── logger.ts
+│   └── validation.ts
+│
+├── middlewares/    # Error handling, authentication, request validation
+│   └── errorHandler.ts
+│
+├── config/         # Configuration files (e.g., environment variables)
+│   └── dbConfig.ts
+│
+├── routes/         # API routes
+│   └── messageRoutes.ts
+│
+└── app.ts          # Application entry point
+```
+
+2. Modularity and Maintainability
+Core Business Logic: Encapsulated in the services/ layer, making it reusable across APIs or other systems.
+Shared Utilities: Centralize reusable functions like logging, validation, and error formatting in the utils/ directory.
+Dependency Injection: Use DI for repositories and services to make components easily testable and replaceable.
+
+3. Database design
+I would use a relational database (e.g., PostgreSQL)  for storing the data. Given that I would be working with sensitive patient data
+certain considerations would have to be taken into mind. As a first step I would use base64 encryption for encoding for data representation,
+ ensuring that binary data is safely transmitted or stored in systems that handle text-only formats. 
+ Furthermore, I would use AES (Advanced Encryption Standard) or another robust encryption method to encrypt sensitive data before encoding it in Base64.
+
+ Here is an example of the table schema for storing the data processed by the Application
+ ```bash
+ CREATE TABLE messages (
+  id SERIAL PRIMARY KEY,
+  full_name JSONB NOT NULL,         -- Stores parsed full name as JSON
+  date_of_birth DATE NOT NULL,
+  primary_condition TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+4. Logging and Error handling
+I would log all significant events (e.g., request received, processing completed, errors).
+I would us=se centralized middleware to handle errors and format consistent error responses.
+
+5. Scalability 
+I would implement scalable API Design using Restful endpoints and break them down to modular resources and keep them organized to their primaric focus.
+For high-throughput parsing or storage, I would use message queues like RabbitMQ.
+Lastly, I would ensure that user authentication was implemented for accessing endpoints in a secure manner.
